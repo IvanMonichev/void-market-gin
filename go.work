@@ -1,1 +1,7 @@
 go 1.24.3
+
+use (
+	./user-svc
+	./payment-svc
+	./order-svc
+)
