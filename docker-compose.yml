@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=void_market_users
+    restart: unless-stopped
+
+#  user-svc:
+#    build:
+#      context: ./user-svc
+#      dockerfile: Dockerfile
+#    container_name: user-svc
+#    ports:
+#      - "4010:4010"
+#
+#    depends_on:
+#      - mongo
+#    restart: unless-stopped
+
+volumes:
+  mongo-data:
