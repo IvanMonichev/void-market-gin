@@ -12,5 +12,5 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "user-svc up"})
 	})
 
-	err := r.Run(":4010")
+	r.Run(":4010")
 }
