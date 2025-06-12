@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/app"
+	"github.com/IvanMonichev/void-market-gin/user-svc/internal/config"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/repository"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/service"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -10,8 +12,10 @@ import (
 )
 
 func main() {
+	cfg := config.MustLoad()
+	fmt.Println(cfg.Mongo)
 
-	client, err := mongo.Connect(options.Client().ApplyURI("mongodb://root:password@localhost:27019"))
+	client, err := mongo.Connect(options.Client().ApplyURI(cfg.Mongo.URI))
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)
 	}
