@@ -11,6 +11,8 @@ import (
 type UserRepository interface {
 	Create(ctx context.Context, user *model.User) (*model.User, error)
 	FindByID(ctx context.Context, id bson.ObjectID) (*model.User, error)
+	Update(ctx context.Context, user *model.User) (*model.User, error)
+	Delete(ctx context.Context, id bson.ObjectID) error
 }
 
 type MongoUserRepository struct {
@@ -40,4 +42,29 @@ func (r *MongoUserRepository) FindByID(ctx context.Context, id bson.ObjectID) (*
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (r *MongoUserRepository) Update(ctx context.Context, user *model.User) (*model.User, error) {
+	user.UpdatedAt = time.Now()
+
+	filter := bson.M{"_id": user.ID}
+	update := bson.M{"$set": bson.M{
+		"name":       user.Name,
+		"email":      user.Email,
+		"password":   user.Password,
+		"updated_at": user.UpdatedAt,
+	}}
+
+	_, err := r.collection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (r *MongoUserRepository) Delete(ctx context.Context, id bson.ObjectID) error {
+	filter := bson.M{"_id": id}
+	_, err := r.collection.DeleteOne(ctx, filter)
+	return err
 }
