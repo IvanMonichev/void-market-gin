@@ -6,21 +6,18 @@ import (
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/config"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/repository"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/service"
-	"go.mongodb.org/mongo-driver/v2/mongo"
-	"go.mongodb.org/mongo-driver/v2/mongo/options"
-	"log"
+	"github.com/IvanMonichev/void-market-gin/user-svc/internal/storage"
 )
 
 func main() {
 	cfg := config.MustLoad()
 	fmt.Println(cfg.Mongo)
 
-	client, err := mongo.Connect(options.Client().ApplyURI(cfg.Mongo.URI))
-	if err != nil {
-		log.Fatalf("Failed to connect to MongoDB: %v", err)
-	}
-
-	db := client.Database("void_market_users")
+	db := storage.MustConnect(storage.MongoConfig{
+		URI:      cfg.Mongo.URI,
+		Database: cfg.Mongo.Database,
+		Timeout:  cfg.Mongo.Timeout,
+	})
 
 	repo := repository.NewMongoUserRepository(db.Collection("users"))
 	svc := service.New(repo)

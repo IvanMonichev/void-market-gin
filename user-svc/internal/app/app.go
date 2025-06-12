@@ -12,6 +12,7 @@ func SetupRouter(service service.UserService) *gin.Engine {
 	userHandler := handler.New(service)
 	api := router.Group("/api/users")
 	api.POST("/create", userHandler.Create)
+	api.GET("/:id", userHandler.Find)
 
 	return router
 }

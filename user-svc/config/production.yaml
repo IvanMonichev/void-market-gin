@@ -6,3 +6,4 @@ server:
 mongo:
   uri: "mongodb://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}"
   database: "void_market_user"
+  timeout: "10s"

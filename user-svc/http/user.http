@@ -1,0 +1,18 @@
+@baseUrl = http://localhost:4010
+@userId = 684adf8e53d7380a7bb1b2a9
+
+### Получить пользователя по ID
+GET {{baseUrl}}/api/users/{{userId}}
+Accept: application/json
+
+###
+
+### Создать пользователя
+POST {{baseUrl}}/api/users/create
+Content-Type: application/json
+
+{
+  "email": "ivan@example.com",
+  "password": "12345678",
+  "name": "Иван"
+}

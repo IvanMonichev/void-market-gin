@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -21,8 +22,9 @@ type ServerCfg struct {
 }
 
 type MongoCfg struct {
-	URI      string `yaml:"uri" env-required:"true"`
-	Database string `yaml:"database" env-default:"void_market_user"`
+	URI      string        `yaml:"uri" env-required:"true"`
+	Database string        `yaml:"database" env-default:"void_market_user"`
+	Timeout  time.Duration `yaml:"timeout" env-default:"10s"`
 }
 
 func substitutePlaceholders(s string) string {
