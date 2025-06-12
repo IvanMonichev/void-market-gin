@@ -12,6 +12,8 @@ import (
 type UserService interface {
 	Create(ctx context.Context, dto transport.CreateUserDto) (*model.User, error)
 	Find(ctx context.Context, id bson.ObjectID) (*model.User, error)
+	Update(context.Context, *model.User, bson.ObjectID) (*model.User, error)
+	Delete(ctx context.Context, id bson.ObjectID) error
 }
 
 type userService struct {
@@ -39,4 +41,12 @@ func (s *userService) Create(ctx context.Context, dto transport.CreateUserDto) (
 
 func (s *userService) Find(ctx context.Context, id bson.ObjectID) (*model.User, error) {
 	return s.repo.FindByID(ctx, id)
+}
+
+func (s *userService) Update(ctx context.Context, user *model.User, id bson.ObjectID) (*model.User, error) {
+	return s.repo.Update(ctx, user, id)
+}
+
+func (s *userService) Delete(ctx context.Context, id bson.ObjectID) error {
+	return s.repo.Delete(ctx, id)
 }

@@ -11,7 +11,7 @@ import (
 type UserRepository interface {
 	Create(ctx context.Context, user *model.User) (*model.User, error)
 	FindByID(ctx context.Context, id bson.ObjectID) (*model.User, error)
-	Update(ctx context.Context, user *model.User) (*model.User, error)
+	Update(ctx context.Context, user *model.User, id bson.ObjectID) (*model.User, error)
 	Delete(ctx context.Context, id bson.ObjectID) error
 }
 
@@ -44,10 +44,10 @@ func (r *MongoUserRepository) FindByID(ctx context.Context, id bson.ObjectID) (*
 	return &user, nil
 }
 
-func (r *MongoUserRepository) Update(ctx context.Context, user *model.User) (*model.User, error) {
+func (r *MongoUserRepository) Update(ctx context.Context, user *model.User, id bson.ObjectID) (*model.User, error) {
 	user.UpdatedAt = time.Now()
 
-	filter := bson.M{"_id": user.ID}
+	filter := bson.M{"_id": id}
 	update := bson.M{"$set": bson.M{
 		"name":       user.Name,
 		"email":      user.Email,

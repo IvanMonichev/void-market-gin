@@ -11,8 +11,10 @@ func SetupRouter(service service.UserService) *gin.Engine {
 
 	userHandler := handler.New(service)
 	api := router.Group("/api/users")
-	api.POST("/create", userHandler.Create)
+	api.POST("/", userHandler.Create)
 	api.GET("/:id", userHandler.Find)
+	api.PUT("/:id", userHandler.Update)
+	api.DELETE("/:id", userHandler.Delete)
 
 	return router
 }
