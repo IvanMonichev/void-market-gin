@@ -18,8 +18,8 @@ type UserHandler struct {
 	repository repository.UserRepository
 }
 
-func New(service repository.UserRepository) *UserHandler {
-	return &UserHandler{repository: service}
+func New(repository repository.UserRepository) *UserHandler {
+	return &UserHandler{repository: repository}
 }
 
 func (h *UserHandler) Create(c *gin.Context) {
