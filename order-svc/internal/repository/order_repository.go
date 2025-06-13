@@ -3,14 +3,15 @@ package repository
 import (
 	"context"
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/model"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type OrderRepository interface {
 	Create(ctx context.Context, order *model.Order) (*model.Order, error)
-	FindById(ctx context.Context, orderId uint) (*model.Order, error)
-	Update(ctx context.Context, order *model.Order, id uint) (*model.Order, error)
-	Delete(ctx context.Context, id uint) error
+	FindById(ctx context.Context, id uuid.UUID) (*model.Order, error)
+	Update(ctx context.Context, order *model.Order, id uuid.UUID) (*model.Order, error)
+	Delete(ctx context.Context, id uuid.UUID) error
 	GetAll(ctx context.Context, offset int64, limit int64) ([]model.Order, int64, error)
 }
 
@@ -29,15 +30,15 @@ func (r *GormOrderRepository) Create(ctx context.Context, order *model.Order) (*
 	return order, nil
 }
 
-func (r *GormOrderRepository) FindById(ctx context.Context, orderId uint) (*model.Order, error) {
+func (r *GormOrderRepository) FindById(ctx context.Context, id uuid.UUID) (*model.Order, error) {
 	var order model.Order
-	if err := r.db.WithContext(ctx).First(&order, orderId).Error; err != nil {
+	if err := r.db.WithContext(ctx).First(&order, id).Error; err != nil {
 		return nil, err
 	}
 	return &order, nil
 }
 
-func (r *GormOrderRepository) Update(ctx context.Context, order *model.Order, id uint) (*model.Order, error) {
+func (r *GormOrderRepository) Update(ctx context.Context, order *model.Order, id uuid.UUID) (*model.Order, error) {
 	order.ID = id
 	if err := r.db.WithContext(ctx).Save(order).Error; err != nil {
 		return nil, err
@@ -45,7 +46,7 @@ func (r *GormOrderRepository) Update(ctx context.Context, order *model.Order, id
 	return order, nil
 }
 
-func (r *GormOrderRepository) Delete(ctx context.Context, id uint) error {
+func (r *GormOrderRepository) Delete(ctx context.Context, id uuid.UUID) error {
 	if err := r.db.WithContext(ctx).Delete(&model.Order{}, id).Error; err != nil {
 		return err
 	}

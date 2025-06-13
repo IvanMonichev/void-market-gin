@@ -1,18 +1,22 @@
 package transport
 
-import "time"
+import (
+	"github.com/IvanMonichev/void-market-gin/order-svc/internal/model"
+	"github.com/google/uuid"
+	"time"
+)
 
-type ItemRDO struct {
-	ID       string  `json:"productId"`
-	Quantity int     `json:"quantity"`
-	Price    float64 `json:"price"`
+type OrderDTO struct {
+	UserID     uuid.UUID         `json:"userId" binding:"required"`
+	ProductIDs []uuid.UUID       `json:"productIds" binding:"required,dive,required"`
+	Status     model.OrderStatus `json:"status" binding:"required"`
 }
-
 type OrderRDO struct {
-	OrderID   string    `json:"orderId"`
-	UserID    string    `json:"userId"`
-	Items     []ItemRDO `json:"items"`
-	Total     float64   `json:"total"`
-	Status    string    `json:"status"`
-	CreatedAt time.Time `json:"createdAt"`
+	ID        uuid.UUID    `json:"id"`
+	UserID    uuid.UUID    `json:"userId"`
+	Status    string       `json:"status"`
+	Total     float64      `json:"total"`
+	Products  []ProductRDO `json:"products"`
+	CreatedAt time.Time    `json:"createdAt"`
+	UpdatedAt time.Time    `json:"updatedAt"`
 }
