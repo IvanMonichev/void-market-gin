@@ -63,7 +63,6 @@ func (r *GormOrderRepository) GetAll(ctx context.Context, offset int64, limit in
 		return nil, 0, err
 	}
 
-	// Применяем пагинацию
 	if err := r.db.WithContext(ctx).
 		Limit(int(limit)).
 		Offset(int(offset)).
