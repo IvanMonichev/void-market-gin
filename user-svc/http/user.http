@@ -1,8 +1,12 @@
 @baseUrl = http://localhost:4010
-@userId = 684b30d0d9b9247610f1aee5
+@userId = 684bcd0ce13ad1bc843b41cb
 
 ### Получить пользователя по ID
 GET {{baseUrl}}/api/users/{{userId}}
+Accept: application/json
+
+### Получить пользователей
+GET {{baseUrl}}/api/users/all
 Accept: application/json
 
 ###
@@ -12,9 +16,19 @@ POST {{baseUrl}}/api/users
 Content-Type: application/json
 
 {
-  "email": "ivan@example.com",
+  "email": "desin@example.com",
   "password": "12345678",
-  "name": "Иван"
+  "name": "Денис"
+}
+
+### Обновить пользователя
+PUT {{baseUrl}}/api/users/{{userId}}
+Content-Type: application/json
+
+{
+  "email": "sdasd@example.com",
+  "password": "12345678",
+  "name": "Андрей"
 }
 
 ###

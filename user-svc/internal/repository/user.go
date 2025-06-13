@@ -5,6 +5,7 @@ import (
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/model"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"time"
 )
 
@@ -13,6 +14,7 @@ type UserRepository interface {
 	FindByID(ctx context.Context, id bson.ObjectID) (*model.User, error)
 	Update(ctx context.Context, user *model.User, id bson.ObjectID) (*model.User, error)
 	Delete(ctx context.Context, id bson.ObjectID) error
+	GetAll(ctx context.Context, offset, limit int64) ([]*model.User, int64, error)
 }
 
 type MongoUserRepository struct {
@@ -67,4 +69,35 @@ func (r *MongoUserRepository) Delete(ctx context.Context, id bson.ObjectID) erro
 	filter := bson.M{"_id": id}
 	_, err := r.collection.DeleteOne(ctx, filter)
 	return err
+}
+
+func (r *MongoUserRepository) GetAll(ctx context.Context, offset, limit int64) ([]*model.User, int64, error) {
+
+	opts := options.Find().SetSkip(offset).SetLimit(limit)
+	total, err := r.collection.CountDocuments(ctx, bson.M{})
+	if err != nil {
+		return nil, 0, err
+	}
+
+	cursor, err := r.collection.Find(ctx, bson.M{}, opts)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer cursor.Close(ctx)
+
+	var users []*model.User
+
+	for cursor.Next(ctx) {
+		var user model.User
+		if err := cursor.Decode(&user); err != nil {
+			return nil, 0, err
+		}
+		users = append(users, &user)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, 0, err
+	}
+
+	return users, total, nil
 }

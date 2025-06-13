@@ -5,7 +5,6 @@ import (
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/app"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/config"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/repository"
-	"github.com/IvanMonichev/void-market-gin/user-svc/internal/service"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/storage"
 )
 
@@ -20,8 +19,7 @@ func main() {
 	})
 
 	repo := repository.NewMongoUserRepository(db.Collection("users"))
-	svc := service.New(repo)
-	router := app.SetupRouter(svc)
+	router := app.SetupRouter(repo)
 
 	router.Run(":4010")
 }
