@@ -2,8 +2,10 @@ package storage
 
 import (
 	"fmt"
+	"github.com/IvanMonichev/void-market-gin/order-svc/internal/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 )
 
 func MustConnect(dsn string) *gorm.DB {
@@ -14,4 +16,10 @@ func MustConnect(dsn string) *gorm.DB {
 
 	return db
 
+}
+
+func AutoMigrate(db *gorm.DB) {
+	if err := db.AutoMigrate(&model.Order{}, &model.OrderItem{}); err != nil {
+		log.Fatalf("auto migration failed: %v", err)
+	}
 }

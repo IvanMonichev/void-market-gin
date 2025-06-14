@@ -6,7 +6,6 @@ import (
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/repository"
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/transport"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
 	"strconv"
 	"time"
@@ -55,11 +54,13 @@ func (h *OrderHandler) Create(ctx *gin.Context) {
 }
 
 func (h *OrderHandler) Find(ctx *gin.Context) {
-	id, err := uuid.Parse(ctx.Param("id"))
+	idParam := ctx.Param("id")
+	idUint, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid UUID"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 		return
 	}
+	id := uint(idUint)
 
 	order, err := h.repo.FindById(ctx.Request.Context(), id)
 	if err != nil {
@@ -92,11 +93,13 @@ func (h *OrderHandler) GetAll(ctx *gin.Context) {
 }
 
 func (h *OrderHandler) Update(ctx *gin.Context) {
-	id, err := uuid.Parse(ctx.Param("id"))
+	idParam := ctx.Param("id")
+	idUint, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid UUID"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 		return
 	}
+	id := uint(idUint)
 
 	var dto transport.OrderDTO
 	if err := ctx.ShouldBindJSON(&dto); err != nil {
@@ -134,11 +137,13 @@ func (h *OrderHandler) Update(ctx *gin.Context) {
 }
 
 func (h *OrderHandler) Delete(ctx *gin.Context) {
-	id, err := uuid.Parse(ctx.Param("id"))
+	idParam := ctx.Param("id")
+	idUint, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid UUID"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 		return
 	}
+	id := uint(idUint)
 
 	if err := h.repo.Delete(ctx.Request.Context(), id); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete order"})

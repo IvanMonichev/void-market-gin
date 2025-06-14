@@ -36,7 +36,7 @@ services:
     container_name: pgadmin
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@void.local
+      PGADMIN_DEFAULT_EMAIL: admin@itmo.ru
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - "5050:80"

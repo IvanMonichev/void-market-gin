@@ -14,6 +14,7 @@ func main() {
 	cfg := config.MustLoad()
 
 	db := storage.MustConnect(cfg.Postgres.DSN)
+	storage.AutoMigrate(db)
 
 	orderRepo := repository.NewGormOrderRepository(db)
 	orderHandler := handler.NewOrderHandler(orderRepo)
