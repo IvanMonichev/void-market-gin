@@ -32,7 +32,7 @@ func (r *GormOrderRepository) Create(ctx context.Context, order *model.Order) (*
 
 func (r *GormOrderRepository) FindById(ctx context.Context, id uuid.UUID) (*model.Order, error) {
 	var order model.Order
-	if err := r.db.WithContext(ctx).First(&order, id).Error; err != nil {
+	if err := r.db.WithContext(ctx).Preload("Products").First(&order, id).Error; err != nil {
 		return nil, err
 	}
 	return &order, nil
@@ -40,7 +40,7 @@ func (r *GormOrderRepository) FindById(ctx context.Context, id uuid.UUID) (*mode
 
 func (r *GormOrderRepository) Update(ctx context.Context, order *model.Order, id uuid.UUID) (*model.Order, error) {
 	order.ID = id
-	if err := r.db.WithContext(ctx).Save(order).Error; err != nil {
+	if err := r.db.WithContext(ctx).Preload("Products").Save(order).Error; err != nil {
 		return nil, err
 	}
 	return order, nil
@@ -64,6 +64,7 @@ func (r *GormOrderRepository) GetAll(ctx context.Context, offset int64, limit in
 	}
 
 	if err := r.db.WithContext(ctx).
+		Preload("Products").
 		Limit(int(limit)).
 		Offset(int(offset)).
 		Find(&orders).Error; err != nil {
