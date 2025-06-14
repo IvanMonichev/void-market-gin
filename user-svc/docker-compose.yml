@@ -16,7 +16,7 @@ services:
 
   user-svc:
     build:
-      dockerfile: ./docker/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "4010:4010"
     depends_on:

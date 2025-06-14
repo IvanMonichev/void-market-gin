@@ -1,4 +1,4 @@
-package app
+package router
 
 import (
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/handler"

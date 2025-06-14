@@ -2,10 +2,10 @@ FROM golang:1.24.3 AS builder
 
 WORKDIR /app
 
-COPY ../go.mod go.sum ./
+COPY go.mod ./
 RUN go mod download
 
-COPY .. .
+COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o user-svc ./cmd/server
 
@@ -15,9 +15,6 @@ WORKDIR /app
 
 # Копируем бинарник
 COPY --from=builder /app/user-svc .
-
-# Копируем конфигурацию (если нужно встроить её в образ)
-COPY ../config/production.yaml ./production.yml
 
 # Порт сервиса
 EXPOSE 4010

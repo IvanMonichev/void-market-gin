@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/IvanMonichev/void-market-gin/user-svc/internal/app"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/config"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/repository"
+	"github.com/IvanMonichev/void-market-gin/user-svc/internal/router"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/storage"
 )
 
@@ -19,7 +19,7 @@ func main() {
 	})
 
 	repo := repository.NewMongoUserRepository(db.Collection("users"))
-	router := app.SetupRouter(repo)
+	router := router.SetupRouter(repo)
 
 	router.Run(":4010")
 }
