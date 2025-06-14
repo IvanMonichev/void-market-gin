@@ -13,7 +13,7 @@ type OrderDTO struct {
 
 type OrderRDO struct {
 	ID        uint           `json:"id"`
-	UserID    uint           `json:"userId"`
+	UserID    string         `json:"userId"`
 	Status    string         `json:"status"`
 	Total     float64        `json:"total"`
 	Items     []OrderItemRDO `json:"items"`
