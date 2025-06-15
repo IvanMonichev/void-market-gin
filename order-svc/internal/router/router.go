@@ -8,15 +8,14 @@ import (
 func SetupRouter(h *handler.OrderHandler) *gin.Engine {
 	r := gin.Default()
 
-	api := r.Group("/api")
+	api := r.Group("/orders")
 
-	orders := api.Group("/orders")
 	{
-		orders.POST("", h.Create)
-		orders.GET("", h.GetAll)
-		orders.GET("/:id", h.Find)
-		orders.PUT("/:id", h.Update)
-		orders.DELETE("/:id", h.Delete)
+		api.POST("", h.Create)
+		api.GET("", h.GetAll)
+		api.GET("/:id", h.Find)
+		api.PUT("/:id", h.Update)
+		api.DELETE("/:id", h.Delete)
 	}
 
 	return r

@@ -11,7 +11,7 @@ import (
 func MustConnect(dsn string) *gorm.DB {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic(fmt.Sprintf("failed to connect to postgres: %v", err))
+		panic(fmt.Sprintf("%v failed to connect to postgres: %v", dsn, err))
 	}
 
 	return db

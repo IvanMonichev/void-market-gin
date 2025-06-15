@@ -89,7 +89,7 @@ func (h *UserHandler) Update(ctx *gin.Context) {
 		ID:       objectID,
 		Name:     dto.Name,
 		Email:    dto.Email,
-		Password: dto.Password, // в боевом коде тут должно быть хеширование!
+		Password: dto.Password,
 	}
 
 	updatedUser, err := h.repository.Update(ctx, user, objectID)

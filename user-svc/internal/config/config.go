@@ -57,7 +57,6 @@ func MustLoad() *Config {
 		log.Fatalf("cannot read config: %s", err)
 	}
 
-	// Подстановка переменных окружения
 	cfg.Server.Port = substitutePlaceholders(cfg.Server.Port)
 	cfg.Mongo.URI = substitutePlaceholders(cfg.Mongo.URI)
 

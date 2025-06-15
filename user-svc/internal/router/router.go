@@ -10,7 +10,7 @@ func SetupRouter(repository repository.UserRepository) *gin.Engine {
 	router := gin.Default()
 
 	userHandler := handler.New(repository)
-	api := router.Group("/api/users")
+	api := router.Group("/users")
 	api.POST("/", userHandler.Create)
 	api.GET("/:id", userHandler.Find)
 	api.PUT("/:id", userHandler.Update)
