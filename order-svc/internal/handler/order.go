@@ -1,22 +1,29 @@
 package handler
 
 import (
+	"github.com/IvanMonichev/void-market-gin/order-svc/internal/broker"
+	"github.com/IvanMonichev/void-market-gin/order-svc/internal/event"
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/mapper"
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/model"
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/repository"
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/transport"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
 )
 
 type OrderHandler struct {
-	repo repository.OrderRepository
+	repo      repository.OrderRepository
+	publisher *broker.Publisher
 }
 
-func NewOrderHandler(repo repository.OrderRepository) *OrderHandler {
-	return &OrderHandler{repo: repo}
+func NewOrderHandler(repo repository.OrderRepository, publisher *broker.Publisher) *OrderHandler {
+	return &OrderHandler{
+		repo:      repo,
+		publisher: publisher,
+	}
 }
 
 func (h *OrderHandler) Create(ctx *gin.Context) {
@@ -48,6 +55,10 @@ func (h *OrderHandler) Create(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create order"})
 		return
+	}
+
+	if err := event.PublishOrderCreated(h.publisher, &order); err != nil {
+		log.Println("failed to publish event:", err)
 	}
 
 	ctx.JSON(http.StatusCreated, mapper.ToOrderRDO(*created))

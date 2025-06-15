@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/IvanMonichev/void-market-gin/order-svc/internal/broker"
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/config"
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/handler"
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/repository"
@@ -15,9 +16,14 @@ func main() {
 
 	db := storage.MustConnect(cfg.Postgres.DSN)
 	storage.AutoMigrate(db)
+	publisher, err := broker.NewPublisher("amqp://guest:guest@rabbitmq:5672/", "order_created")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer publisher.Close()
 
 	orderRepo := repository.NewGormOrderRepository(db)
-	orderHandler := handler.NewOrderHandler(orderRepo)
+	orderHandler := handler.NewOrderHandler(orderRepo, publisher)
 
 	r := router.SetupRouter(orderHandler)
 

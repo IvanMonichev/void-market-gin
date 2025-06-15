@@ -1,11 +1,8 @@
-// internal/mq/publisher.go
-package mq
+package broker
 
 import (
 	"encoding/json"
-	"log"
-
-	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/streadway/amqp"
 )
 
 type Publisher struct {
@@ -26,12 +23,12 @@ func NewPublisher(amqpURL, queueName string) (*Publisher, error) {
 	}
 
 	q, err := ch.QueueDeclare(
-		queueName,
-		true,
-		false,
-		false,
-		false,
-		nil,
+		queueName, // name
+		false,     // durable
+		false,     // delete when unused
+		false,     // exclusive
+		false,     // no-wait
+		nil,       // arguments
 	)
 	if err != nil {
 		return nil, err
@@ -44,31 +41,25 @@ func NewPublisher(amqpURL, queueName string) (*Publisher, error) {
 	}, nil
 }
 
-func (p *Publisher) Publish(payment model.Payment) error {
-	body, err := json.Marshal(payment)
+func (p *Publisher) Publish(message interface{}) error {
+	body, err := json.Marshal(message)
 	if err != nil {
 		return err
 	}
 
 	err = p.channel.Publish(
-		"",
-		p.queue.Name,
+		"",           // exchange
+		p.queue.Name, // routing key
 		false,
 		false,
 		amqp.Publishing{
 			ContentType: "application/json",
 			Body:        body,
-		},
-	)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[MQ OUT] published payment for orderID=%s", payment.OrderID)
-	return nil
+		})
+	return err
 }
 
 func (p *Publisher) Close() {
-	_ = p.channel.Close()
-	_ = p.conn.Close()
+	p.channel.Close()
+	p.conn.Close()
 }

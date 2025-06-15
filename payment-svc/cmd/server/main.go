@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/handler"
-	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/mq"
+	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/rabbitmq"
 	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/repository"
 	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/router"
 	"github.com/rabbitmq/amqp091-go"
@@ -27,7 +27,7 @@ func main() {
 	}
 	defer rmqConn.Close()
 
-	publisher, err := mq.NewPublisher(rmqConn, "payment_created")
+	publisher, err := rabbitmq.NewPublisher(rmqConn, "payment_created")
 	if err != nil {
 		log.Fatal("RabbitMQ publisher error:", err)
 	}
