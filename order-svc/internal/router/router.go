@@ -12,7 +12,7 @@ func SetupRouter(h *handler.OrderHandler) *gin.Engine {
 
 	{
 		api.POST("", h.Create)
-		api.GET("", h.GetAll)
+		api.GET("/all", h.GetAll)
 		api.GET("/:id", h.Find)
 		api.PUT("/:id", h.Update)
 		api.DELETE("/:id", h.Delete)
