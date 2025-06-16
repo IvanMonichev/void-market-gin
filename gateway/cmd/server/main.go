@@ -10,7 +10,12 @@ import (
 func main() {
 	r := gin.Default()
 
-	clients := client.NewClients(config.UserServiceBaseURL, config.OrderServiceBaseURL)
+	urls := client.URLs{
+		UserURL:    config.UserServiceBaseURL,
+		OrderURL:   config.OrderServiceBaseURL,
+		PaymentURL: config.PaymentServiceBaseURL,
+	}
+	clients := client.NewClients(urls)
 
 	router.RegisterUserRoutes(r, clients.User)
 	router.RegisterOrderRouter(r, clients)

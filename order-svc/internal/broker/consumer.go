@@ -3,16 +3,15 @@ package broker
 import (
 	"context"
 	"encoding/json"
-	"log"
-
-	"github.com/IvanMonichev/void-market-gin/order-svc/internal/domain"
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/repository"
 	"github.com/streadway/amqp"
+	"log"
+	"shared/enum"
 )
 
 type StatusEvent struct {
-	OrderID uint               `json:"orderId"`
-	Status  domain.OrderStatus `json:"status"`
+	OrderID uint             `json:"orderId"`
+	Status  enum.OrderStatus `json:"status"`
 }
 
 func StartStatusConsumer(amqpURL, queue string, repo repository.OrderRepository) error {

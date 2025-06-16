@@ -6,8 +6,15 @@ import (
 )
 
 type Clients struct {
-	User  *resty.Client
-	Order *resty.Client
+	User    *resty.Client
+	Order   *resty.Client
+	Payment *resty.Client
+}
+
+type URLs struct {
+	UserURL    string
+	OrderURL   string
+	PaymentURL string
 }
 
 // SetClient создает клиента с базовым URL и логами
@@ -25,9 +32,10 @@ func SetClient(baseURL string) *resty.Client {
 		})
 }
 
-func NewClients(userURL, orderURL string) *Clients {
+func NewClients(urls URLs) *Clients {
 	return &Clients{
-		User:  SetClient(userURL),
-		Order: SetClient(orderURL),
+		User:    SetClient(urls.UserURL),
+		Order:   SetClient(urls.OrderURL),
+		Payment: SetClient(urls.PaymentURL),
 	}
 }

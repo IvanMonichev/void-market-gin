@@ -1,14 +1,14 @@
 package transport
 
 import (
-	"github.com/IvanMonichev/void-market-gin/order-svc/internal/domain"
+	"shared/enum"
 	"time"
 )
 
 type OrderDTO struct {
-	UserID string             `json:"userId" binding:"required"`
-	Status domain.OrderStatus `json:"status" binding:"required,oneof=pending paid shipped delivery cancelled"`
-	Items  []OrderItemDTO     `json:"items" binding:"required,dive"`
+	UserID string           `json:"userId" binding:"required"`
+	Status enum.OrderStatus `json:"status" binding:"required,oneof=pending paid shipped delivery cancelled"`
+	Items  []OrderItemDTO   `json:"items" binding:"required,dive"`
 }
 
 type OrderRDO struct {

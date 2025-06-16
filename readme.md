@@ -1,65 +1,59 @@
-# Void Market Gin
+## ⚙️ Используемые технологии
 
+- **Go 1.24.3**
+- **Gin** — HTTP-фреймворк
+- **GORM** — ORM для PostgreSQL
+- **MongoDB Go Driver**
+- **RabbitMQ** — асинхронная коммуникация
+- **Docker + Compose** — контейнеризация и запуск
+
+## 📁 Структура репозитория
+
+- `gateway/` — REST API-шлюз, маршруты `user` и `order`
+- `order-svc/` — PostgreSQL, RabbitMQ consumer, бизнес-логика заказов
+- `user-svc/` — MongoDB, регистрация/авторизация пользователей
+- `payment-svc/` — принимает REST-запрос → публикует статус оплаты в очередь
+
+## 🚀 Запуск
+
+### 1. Установи зависимости и создать `.env` файл из примеров `.env-example` в каждом микросервисе
+
+### 2. Запустить каждый микросервис через docker-compose.yml
+
+```bash
+docker-compose up --build
 ```
-void-market-gin/
-├── README.md
-├── go.work                     # Go workspace file для объединения всех сервисов
-├── build/                      # docker-compose, Makefile и окружение
-│   ├── docker-compose.yml
-│   └── env/
-│       ├── user.env
-│       ├── order.env
-│       └── payment.env
-├── deployments/                # (опционально) манифесты для Kubernetes
-│   └── k8s/
-├── scripts/                    # миграции и утилиты
-│   └── migrate-user-db.sql
-├── shared/                     # общие библиотеки (опционально)
-│   ├── logger/
-│   ├── config/
-│   └── utils/
-├── api/                        # OpenAPI / protobuf контракты
-│   ├── openapi.yaml
-│   └── user.proto
-├── gateway/                    # API Gateway на Gin
-│   ├── cmd/
-│   │   └── gateway/
-│   │       └── main.go
-│   ├── internal/
-│   │   ├── delivery/http/
-│   │   ├── config/
-│   │   └── middleware/
-│   ├── go.mod
-│   └── go.sum
-├── user-svc/                   # Сервис пользователей
-│   ├── cmd/user-svc/main.go
-│   ├── internal/
-│   │   ├── app/
-│   │   ├── delivery/http/
-│   │   ├── domain/
-│   │   ├── infra/db/
-│   │   └── config/
-│   ├── go.mod
-│   └── go.sum
-├── order-svc/                  # Сервис заказов
-│   ├── cmd/order-svc/main.go
-│   ├── internal/
-│   │   ├── app/
-│   │   ├── delivery/http/
-│   │   ├── domain/
-│   │   ├── infra/db/
-│   │   └── infra/kafka/
-│   ├── go.mod
-│   └── go.sum
-└── payment-svc/                # Сервис платежей
-    ├── cmd/payment-svc/main.go
-    ├── internal/
-    │   ├── app/
-    │   ├── delivery/consumer/
-    │   ├── domain/
-    │   ├── infra/db/
-    │   └── infra/kafka/
-    ├── go.mod
-    └── go.sum
 
+### 3. Примеры API
+
+#### 📤 Создание пользователя
+
+```bash
+POST /users/create
+Content-Type: application/json
+{
+  "email": "test@example.com",
+  "password": "12345678",
+  "name": "Иван"
+}
+```
+
+#### 📦 Создание заказа
+```bash
+POST api/orders
+Content-Type: application/json
+{
+  "userId": "684bcd0ce13ad1bc843b41cb",
+  "productIds": [1, 2, 3]
+}
+```
+
+
+#### Запрос на оплату
+```bash
+POST /payment/orders/{id}/status
+Content-Type: application/json
+{
+  "status": "paid"
+}
 ```

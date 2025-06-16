@@ -1,4 +1,4 @@
-package domain
+package enum
 
 type OrderStatus string
 
@@ -9,3 +9,11 @@ const (
 	StatusDelivery  OrderStatus = "delivery"
 	StatusCancelled OrderStatus = "cancelled"
 )
+
+func (s OrderStatus) IsValid() bool {
+	switch s {
+	case StatusPending, StatusPaid, StatusShipped, StatusDelivery, StatusCancelled:
+		return true
+	}
+	return false
+}

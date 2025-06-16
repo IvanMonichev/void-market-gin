@@ -1,17 +1,17 @@
 package handler
 
 import (
-	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/domain"
 	broker "github.com/IvanMonichev/void-market-gin/payment-svc/internal/rabbitmq"
 	"log"
 	"net/http"
+	"shared/enum"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 type OrderStatusUpdateRequest struct {
-	Status domain.OrderStatus `json:"status" binding:"required"`
+	Status enum.OrderStatus `json:"status" binding:"required"`
 }
 
 type PaymentHandler struct {
