@@ -17,7 +17,6 @@ type URLs struct {
 	PaymentURL string
 }
 
-// SetClient создает клиента с базовым URL и логами
 func SetClient(baseURL string) *resty.Client {
 	return resty.New().
 		SetBaseURL(baseURL).

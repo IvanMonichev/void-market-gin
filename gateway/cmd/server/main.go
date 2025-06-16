@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"gateway/internal/client"
 	"gateway/internal/config"
 	"gateway/internal/router"
@@ -10,6 +11,8 @@ import (
 func main() {
 	r := gin.Default()
 	cfg := config.MustLoad()
+
+	fmt.Println(cfg)
 
 	urls := client.URLs{
 		UserURL:    cfg.Services.User,
@@ -22,5 +25,5 @@ func main() {
 	router.RegisterOrderRouter(r, clients)
 	router.RegisterPaymentRouter(r, clients)
 
-	r.Run(cfg.Server.Port)
+	r.Run(":4000")
 }

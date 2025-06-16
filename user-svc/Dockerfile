@@ -2,21 +2,20 @@ FROM golang:1.24.3 AS builder
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY go.mod ./
+COPY go.sum ./
 RUN go mod download
 
 COPY . .
 
-# Собираем бинарник
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o user-svc ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o user-svc cmd/server/main.go
 
 FROM alpine:latest
 
 WORKDIR /app
 
 COPY --from=builder /app/user-svc ./user-svc
-
-COPY config/production.yml ./config/production.yml
+COPY --from=builder /app/config/production.yml ./config/production.yml
 
 EXPOSE 4010
 

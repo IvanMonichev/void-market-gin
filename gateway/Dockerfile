@@ -1,6 +1,5 @@
-FROM golang:1.21-alpine AS builder
+FROM golang:1.24 AS builder
 
-RUN apk add --no-cache git
 
 WORKDIR /app
 
@@ -9,19 +8,18 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o gateway ./cmd/server/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o gateway ./cmd/server/main.go
 
 FROM alpine:latest
 
 WORKDIR /app
 
-COPY --from=builder /app/gateway .
-
-COPY config/production.yml ./config.yml
-COPY .env .env
+COPY --from=builder /app/gateway ./gateway
+COPY --from=builder /app/config/production.yml ./production.yml
+COPY --from=builder /app/.env /app/.env
 
 EXPOSE 4000
 
-ENV CONFIG_PATH=/app/config.yml
+ENV CONFIG_PATH=/app/production.yml
 
 ENTRYPOINT ["./gateway"]
