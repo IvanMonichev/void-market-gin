@@ -15,7 +15,6 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o order-svc ./cmd/server/mai
 
 FROM alpine:latest
 
-RUN mkdir -p /app
 WORKDIR /app
 
 COPY --from=builder /app/order-svc ./order-svc
