@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"github.com/IvanMonichev/void-market-gin/shared/enum"
+	"gateway/pkg/enum"
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
 	"net/http"

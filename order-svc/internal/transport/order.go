@@ -1,7 +1,7 @@
 package transport
 
 import (
-	"shared/enum"
+	"github.com/IvanMonichev/void-market-gin/order-svc/pkg/enum"
 	"time"
 )
 

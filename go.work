@@ -5,5 +5,4 @@ use (
 	./payment-svc
 	./order-svc
 	./gateway
-	./shared
 )

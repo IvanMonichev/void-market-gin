@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/IvanMonichev/void-market-gin/order-svc/internal/repository"
+	"github.com/IvanMonichev/void-market-gin/order-svc/pkg/enum"
 	"github.com/streadway/amqp"
 	"log"
-	"shared/enum"
 )
 
 type StatusEvent struct {

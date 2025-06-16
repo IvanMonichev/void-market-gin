@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/IvanMonichev/void-market-gin/shared/util"
+	"gateway/pkg/util"
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/joho/godotenv"
 	"log"

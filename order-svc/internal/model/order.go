@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/IvanMonichev/void-market-gin/shared/enum"
+	"github.com/IvanMonichev/void-market-gin/order-svc/pkg/enum"
 	"time"
 )
 
