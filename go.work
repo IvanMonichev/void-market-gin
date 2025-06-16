@@ -4,5 +4,5 @@ use (
 	./user-svc
 	./payment-svc
 	./order-svc
-	gateway
+	./gateway
 )

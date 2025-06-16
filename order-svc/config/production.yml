@@ -7,3 +7,7 @@ server:
 postgres:
   dsn: "postgres://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}?sslmode=disable"
   timeout: "10s"
+
+rabbitmq:
+  url: "amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}@{RABBITMQ_HOST}:{RABBITMQ_PORT}/"
+  queue: "order_status_changed"

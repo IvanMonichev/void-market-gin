@@ -13,6 +13,7 @@ type Config struct {
 	Env      string      `yaml:"env" env-default:"local"`
 	Server   ServerCfg   `yaml:"server"`
 	Postgres PostgresCfg `yaml:"postgres"`
+	RabbitMQ RabbitMQCfg `yaml:"rabbitmq"`
 }
 
 type ServerCfg struct {
@@ -23,6 +24,11 @@ type ServerCfg struct {
 type PostgresCfg struct {
 	DSN     string        `yaml:"dsn" env-required:"true"`
 	Timeout time.Duration `yaml:"timeout" env-default:"10s"`
+}
+
+type RabbitMQCfg struct {
+	URL   string `yaml:"url" env-required:"true"`
+	Queue string `yaml:"queue" env-default:"order_status_changed"`
 }
 
 func substitutePlaceholders(s string) string {
@@ -57,6 +63,7 @@ func MustLoad() *Config {
 
 	cfg.Server.Port = substitutePlaceholders(cfg.Server.Port)
 	cfg.Postgres.DSN = substitutePlaceholders(cfg.Postgres.DSN)
+	cfg.RabbitMQ.URL = substitutePlaceholders(cfg.RabbitMQ.URL)
 
 	return &cfg
 }

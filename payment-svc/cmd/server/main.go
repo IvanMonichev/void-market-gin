@@ -2,42 +2,23 @@ package main
 
 import (
 	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/handler"
-	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/rabbitmq"
-	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/repository"
-	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/router"
-	"github.com/rabbitmq/amqp091-go"
-	"go.mongodb.org/mongo-driver/v2/mongo"
-	"go.mongodb.org/mongo-driver/v2/mongo/options"
+	broker "github.com/IvanMonichev/void-market-gin/payment-svc/internal/rabbitmq"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	// MongoDB
-	client, err := mongo.Connect(options.Client().ApplyURI("mongodb://localhost:27017"))
+	r := gin.Default()
+
+	publisher, err := broker.NewPublisher("amqp://guest:guest@localhost:5672/", "order_status_changed")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Failed to init publisher:", err)
 	}
-	db := client.Database("void_market")
-	repo := repository.NewMongoPaymentRepository(db)
+	defer publisher.Close()
 
-	// RabbitMQ
-	rmqConn, err := amqp091.Dial("amqp://guest:guest@localhost:5672/")
-	if err != nil {
-		log.Fatal("RabbitMQ connection error:", err)
-	}
-	defer rmqConn.Close()
+	h := handler.NewPaymentHandler(publisher)
+	r.POST("/payment/orders/:id/status", h.UpdateOrderStatus)
 
-	publisher, err := rabbitmq.NewPublisher(rmqConn, "payment_created")
-	if err != nil {
-		log.Fatal("RabbitMQ publisher error:", err)
-	}
-
-	// Handler
-	h := handler.NewPaymentHandler(repo, publisher)
-
-	// Router
-	r := router.SetupRouter(h)
-	if err := r.Run(":4030"); err != nil {
-		log.Fatal(err)
-	}
+	r.Run(":4030")
 }

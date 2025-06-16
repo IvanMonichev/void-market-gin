@@ -1,11 +1,8 @@
-package rabbitmq
+package broker
 
 import (
 	"encoding/json"
-	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/internal/model"
-	"log"
-
-	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/streadway/amqp"
 )
 
 type Publisher struct {
@@ -25,50 +22,23 @@ func NewPublisher(amqpURL, queueName string) (*Publisher, error) {
 		return nil, err
 	}
 
-	q, err := ch.QueueDeclare(
-		queueName,
-		true,
-		false,
-		false,
-		false,
-		nil,
-	)
+	q, err := ch.QueueDeclare(queueName, false, false, false, false, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Publisher{
-		conn:    conn,
-		channel: ch,
-		queue:   q,
-	}, nil
+	return &Publisher{conn: conn, channel: ch, queue: q}, nil
 }
 
-func (p *Publisher) Publish(payment model.Payment) error {
-	body, err := json.Marshal(payment)
-	if err != nil {
-		return err
-	}
-
-	err = p.channel.Publish(
-		"",
-		p.queue.Name,
-		false,
-		false,
-		amqp.Publishing{
-			ContentType: "application/json",
-			Body:        body,
-		},
-	)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[MQ OUT] published payment for orderID=%s", payment.OrderID)
-	return nil
+func (p *Publisher) Publish(msg interface{}) error {
+	body, _ := json.Marshal(msg)
+	return p.channel.Publish("", p.queue.Name, false, false, amqp.Publishing{
+		ContentType: "application/json",
+		Body:        body,
+	})
 }
 
 func (p *Publisher) Close() {
-	_ = p.channel.Close()
-	_ = p.conn.Close()
+	p.channel.Close()
+	p.conn.Close()
 }

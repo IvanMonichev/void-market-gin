@@ -16,14 +16,15 @@ func main() {
 
 	db := storage.MustConnect(cfg.Postgres.DSN)
 	storage.AutoMigrate(db)
-	publisher, err := broker.NewPublisher("amqp://guest:guest@rabbitmq:5672/", "order_created")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer publisher.Close()
 
 	orderRepo := repository.NewGormOrderRepository(db)
-	orderHandler := handler.NewOrderHandler(orderRepo, publisher)
+
+	err := broker.StartStatusConsumer(cfg.RabbitMQ.URL, cfg.RabbitMQ.Queue, orderRepo)
+	if err != nil {
+		log.Fatal("consumer error:", err)
+	}
+
+	orderHandler := handler.NewOrderHandler(orderRepo)
 
 	r := router.SetupRouter(orderHandler)
 

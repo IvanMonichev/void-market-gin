@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"github.com/IvanMonichev/void-market-gin/payment-svc/internal/domain"
+	broker "github.com/IvanMonichev/void-market-gin/payment-svc/internal/rabbitmq"
 	"log"
 	"net/http"
 	"strconv"
@@ -8,8 +10,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type OrderUpdate struct {
-	Status string `json:"status" binding:"required"`
+type OrderStatusUpdateRequest struct {
+	Status domain.OrderStatus `json:"status" binding:"required"`
 }
 
 type PaymentHandler struct {
@@ -36,7 +38,11 @@ func (h *PaymentHandler) UpdateOrderStatus(c *gin.Context) {
 		return
 	}
 
-	// Формируем сообщение
+	if !req.Status.IsValid() {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid status value"})
+		return
+	}
+
 	message := map[string]interface{}{
 		"orderId": orderID,
 		"status":  req.Status,
