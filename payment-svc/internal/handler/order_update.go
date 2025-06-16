@@ -2,9 +2,9 @@ package handler
 
 import (
 	broker "github.com/IvanMonichev/void-market-gin/payment-svc/internal/rabbitmq"
+	"github.com/IvanMonichev/void-market-gin/shared/enum"
 	"log"
 	"net/http"
-	"shared/enum"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

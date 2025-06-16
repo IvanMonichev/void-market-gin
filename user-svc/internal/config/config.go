@@ -1,10 +1,10 @@
 package config
 
 import (
+	"github.com/IvanMonichev/void-market-gin/shared/util"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
@@ -27,20 +27,6 @@ type MongoCfg struct {
 	Timeout  time.Duration `yaml:"timeout" env-default:"10s"`
 }
 
-func substitutePlaceholders(s string) string {
-	for {
-		start := strings.Index(s, "{")
-		end := strings.Index(s, "}")
-		if start == -1 || end == -1 || end < start {
-			break
-		}
-		key := s[start+1 : end]
-		val := os.Getenv(key)
-		s = strings.Replace(s, "{"+key+"}", val, 1)
-	}
-	return s
-}
-
 func MustLoad() *Config {
 	if err := godotenv.Load(".env"); err != nil {
 		log.Println("No .env file found or failed to load it")
@@ -57,8 +43,8 @@ func MustLoad() *Config {
 		log.Fatalf("cannot read config: %s", err)
 	}
 
-	cfg.Server.Port = substitutePlaceholders(cfg.Server.Port)
-	cfg.Mongo.URI = substitutePlaceholders(cfg.Mongo.URI)
+	cfg.Server.Port = util.SubstitutePlaceholders(cfg.Server.Port)
+	cfg.Mongo.URI = util.SubstitutePlaceholders(cfg.Mongo.URI)
 
 	return &cfg
 }

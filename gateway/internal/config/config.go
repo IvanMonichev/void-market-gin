@@ -6,29 +6,23 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"os"
-	"time"
 )
 
 type Config struct {
-	Env      string      `yaml:"env" env-default:"local"`
+	Env      string      `yaml:"env"`
 	Server   ServerCfg   `yaml:"server"`
-	Postgres PostgresCfg `yaml:"postgres"`
-	RabbitMQ RabbitMQCfg `yaml:"rabbitmq"`
+	Services ServicesCfg `yaml:"services"`
 }
 
 type ServerCfg struct {
-	Address string `yaml:"address" env-default:"0.0.0.0"`
-	Port    string `yaml:"port" env-required:"true"`
+	Address string `yaml:"address"`
+	Port    string `yaml:"port"`
 }
 
-type PostgresCfg struct {
-	DSN     string        `yaml:"dsn" env-required:"true"`
-	Timeout time.Duration `yaml:"timeout" env-default:"10s"`
-}
-
-type RabbitMQCfg struct {
-	URL   string `yaml:"url" env-required:"true"`
-	Queue string `yaml:"queue" env-default:"order_status_changed"`
+type ServicesCfg struct {
+	User    string `yaml:"user"`
+	Order   string `yaml:"order"`
+	Payment string `yaml:"payment"`
 }
 
 func MustLoad() *Config {
@@ -48,8 +42,9 @@ func MustLoad() *Config {
 	}
 
 	cfg.Server.Port = util.SubstitutePlaceholders(cfg.Server.Port)
-	cfg.Postgres.DSN = util.SubstitutePlaceholders(cfg.Postgres.DSN)
-	cfg.RabbitMQ.URL = util.SubstitutePlaceholders(cfg.RabbitMQ.URL)
+	cfg.Services.User = util.SubstitutePlaceholders(cfg.Services.User)
+	cfg.Services.Order = util.SubstitutePlaceholders(cfg.Services.Order)
+	cfg.Services.Payment = util.SubstitutePlaceholders(cfg.Services.Payment)
 
 	return &cfg
 }

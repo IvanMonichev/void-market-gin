@@ -2,10 +2,10 @@ package handler
 
 import (
 	"fmt"
+	"github.com/IvanMonichev/void-market-gin/shared/enum"
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
 	"net/http"
-	"shared/enum"
 )
 
 type OrderStatusUpdateRequest struct {
@@ -33,13 +33,12 @@ func (h *PaymentHandler) UpdateOrderStatus(c *gin.Context) {
 
 	resp, err := h.Client.R().
 		SetBody(req).
-		SetResult(map[string]interface{}{}).
-		Post(fmt.Sprintf("/orders/%s/status", orderID))
+		Post(fmt.Sprintf("/payment/orders/%s/status", orderID))
 
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"error": "payment service unreachable"})
 		return
 	}
 
-	c.JSON(resp.StatusCode(), resp.Result())
+	c.Data(resp.StatusCode(), resp.Header().Get("Content-Type"), resp.Body())
 }

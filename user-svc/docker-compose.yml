@@ -13,6 +13,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_DB}
     restart: unless-stopped
+    networks:
+      - app-network
 
   mongo-express:
     image: mongo-express
@@ -29,15 +31,25 @@ services:
     depends_on:
       - mongo
     restart: unless-stopped
+    networks:
+      - app-network
 
   user-svc:
     build:
-      context: .
+      context: ../
+      dockerfile: user-svc/Dockerfile
     container_name: user-svc
     ports:
       - "4010:4010"
     depends_on:
       - mongo
+    networks:
+      - app-network
 
 volumes:
   mongo-data:
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge

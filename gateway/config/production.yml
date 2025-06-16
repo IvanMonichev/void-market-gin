@@ -1,0 +1,10 @@
+env: "production"
+
+server:
+  address: "0.0.0.0"
+  port: "4000"
+
+services:
+  user: "http://{USER_SERVICE_HOST}:{USER_SERVICE_PORT}"
+  order: "http://{ORDER_SERVICE_HOST}:{ORDER_SERVICE_PORT}"
+  payment: "http://{PAYMENT_SERVICE_HOST}:{PAYMENT_SERVICE_PORT}"

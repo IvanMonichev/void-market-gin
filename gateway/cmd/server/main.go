@@ -9,16 +9,18 @@ import (
 
 func main() {
 	r := gin.Default()
+	cfg := config.MustLoad()
 
 	urls := client.URLs{
-		UserURL:    config.UserServiceBaseURL,
-		OrderURL:   config.OrderServiceBaseURL,
-		PaymentURL: config.PaymentServiceBaseURL,
+		UserURL:    cfg.Services.User,
+		OrderURL:   cfg.Services.Order,
+		PaymentURL: cfg.Services.Payment,
 	}
 	clients := client.NewClients(urls)
 
 	router.RegisterUserRoutes(r, clients.User)
 	router.RegisterOrderRouter(r, clients)
+	router.RegisterPaymentRouter(r, clients)
 
-	r.Run(":4000")
+	r.Run(cfg.Server.Port)
 }

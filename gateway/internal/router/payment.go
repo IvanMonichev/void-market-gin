@@ -9,8 +9,8 @@ import (
 func RegisterPaymentRouter(r *gin.Engine, clients *client.Clients) {
 	h := handler.NewPaymentHandler(clients.Payment)
 
-	payment := r.Group("/api/payment/order")
+	payment := r.Group("/api/payment")
 	{
-		payment.POST("/:id/status", h.UpdateOrderStatus)
+		payment.POST("/orders/:id/status", h.UpdateOrderStatus)
 	}
 }
