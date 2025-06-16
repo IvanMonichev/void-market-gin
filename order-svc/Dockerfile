@@ -11,7 +11,6 @@ RUN go mod download
 
 COPY . .
 
-# Собираем бинарник
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o order-svc ./cmd/server/main.go
 
 FROM alpine:latest
