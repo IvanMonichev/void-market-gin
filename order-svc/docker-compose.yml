@@ -1,20 +1,17 @@
-version: '3.9'
 
 services:
-  order-svc:
+  gin.order-svc:
     build:
       context: .
-    container_name: order-svc
     depends_on:
-      - postgres
+      - gin.order-svc.postgres
     ports:
       - "4020:4020"
     networks:
       - app-network
 
-  postgres:
+  gin.order-svc.postgres:
     image: postgres:15
-    container_name: postgres
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -26,16 +23,9 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - app-network
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
 
-  pgadmin:
+  gin.order-svc.pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
@@ -44,21 +34,9 @@ services:
     ports:
       - "5050:80"
     depends_on:
-      - postgres
+      - gin.order-svc.postgres
     networks:
       - app-network
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"   # порт AMQP
-      - "15672:15672" # порт UI
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    networks:
-      - app-network
-
 
 volumes:
   pgdata:
@@ -66,4 +44,3 @@ volumes:
 networks:
   app-network:
     driver: bridge
-    external: true

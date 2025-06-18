@@ -1,16 +1,23 @@
-version: '3.9'
-
 services:
-  payment-svc:
+  gin.payment-svc:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: payment-svc
     ports:
       - "4030:4030"
     networks:
       - app-network
 
+  gin.payment-svc.rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5673:5672"   # порт AMQP
+      - "15673:15672" # порт UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - app-network
 networks:
   app-network:
-    external: true
+    driver: bridge

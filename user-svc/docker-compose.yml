@@ -1,11 +1,10 @@
 version: '3.8'
 
 services:
-  mongo:
+  gin.user-svc.mongo:
     image: mongo:6
-    container_name: mongo
     ports:
-      - "27019:27017"
+      - "27018:27017"
     volumes:
       - mongo-data:/data/db
     environment:
@@ -16,11 +15,10 @@ services:
     networks:
       - app-network
 
-  mongo-express:
+  gin.user-svc.mongo-express:
     image: mongo-express
-    container_name: mongo-express
     ports:
-      - "8081:8081"
+      - "8082:8081"
     environment:
       - ME_CONFIG_MONGODB_SERVER=${MONGO_HOST}
       - ME_CONFIG_MONGODB_PORT=${MONGO_PORT}
@@ -29,19 +27,18 @@ services:
       - ME_CONFIG_BASICAUTH_USERNAME=admin
       - ME_CONFIG_BASICAUTH_PASSWORD=admin
     depends_on:
-      - mongo
+      - gin.user-svc.mongo
     restart: unless-stopped
     networks:
       - app-network
 
-  user-svc:
+  gin.user-svc:
     build:
       context: .
-    container_name: user-svc
     ports:
       - "4010:4010"
     depends_on:
-      - mongo
+      - gin.user-svc.mongo
     networks:
       - app-network
 
