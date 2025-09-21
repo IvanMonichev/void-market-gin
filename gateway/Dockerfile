@@ -18,7 +18,7 @@ COPY --from=builder /app/gateway ./gateway
 COPY --from=builder /app/config/production.yml ./production.yml
 COPY --from=builder /app/.env /app/.env
 
-EXPOSE 4000
+EXPOSE 4010
 
 ENV CONFIG_PATH=/app/production.yml
 

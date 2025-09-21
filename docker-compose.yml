@@ -1,0 +1,42 @@
+services:
+
+  gin.gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - "4010:4010"
+    networks:
+      - void-market-network
+
+
+  gin.user-svc:
+    build:
+      context: ./user-svc
+    ports:
+      - "4011:4011"
+    networks:
+      - void-market-network
+
+  gin.payment-svc:
+    build:
+      context: ./payment-svc
+      dockerfile: Dockerfile
+    ports:
+      - "4012:4012"
+    networks:
+      - void-market-network
+
+  gin.order-svc:
+    build:
+      context: ./order-svc
+    ports:
+      - "4013:4013"
+    networks:
+      - void-market-network
+
+
+networks:
+  void-market-network:
+    name: void-market-network
+    driver: bridge

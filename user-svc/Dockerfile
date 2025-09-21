@@ -19,7 +19,7 @@ COPY --from=builder /app/config/production.yml ./config/production.yml
 
 ENV CONFIG_PATH=/app/config/production.yml
 
-EXPOSE 4010
+EXPOSE 4011
 
 COPY .env /app/.env
 

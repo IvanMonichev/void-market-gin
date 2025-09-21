@@ -21,5 +21,5 @@ func main() {
 	repo := repository.NewMongoUserRepository(db.Collection("users"))
 	router := router.SetupRouter(repo)
 
-	router.Run(":4010")
+	router.Run(":4011")
 }

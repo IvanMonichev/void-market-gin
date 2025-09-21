@@ -45,5 +45,5 @@ func main() {
 	h := handler.NewPaymentHandler(publisher)
 	r.POST("/payment/orders/:id/status", h.UpdateOrderStatus)
 
-	r.Run(":4030")
+	r.Run(":4012")
 }

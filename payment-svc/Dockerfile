@@ -18,6 +18,6 @@ WORKDIR /app
 
 COPY --from=builder /app/payment-svc ./payment-svc
 COPY --from=builder /app/.env ./.env
-EXPOSE 4030
+EXPOSE 4012
 
 ENTRYPOINT ["./payment-svc"]
