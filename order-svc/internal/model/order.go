@@ -8,7 +8,7 @@ import (
 type Order struct {
 	ID        uint `gorm:"primaryKey;autoIncrement"`
 	UserID    string
-	Status    enum.OrderStatus
+	Status    enum.OrderStatus `gorm:"not null;"`
 	Total     float64
 	Items     []OrderItem `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE"`
 	CreatedAt time.Time
