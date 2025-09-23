@@ -1,5 +1,7 @@
 package transport
 
+import "time"
+
 type OrderItemDTO struct {
 	Name      string  `json:"name" binding:"required,min=2"`
 	Quantity  int     `json:"quantity" binding:"required,gte=1"`
@@ -7,8 +9,10 @@ type OrderItemDTO struct {
 }
 
 type OrderItemRDO struct {
-	ID        uint    `json:"id"`
-	Name      string  `json:"name"`
-	Quantity  int     `json:"quantity"`
-	UnitPrice float64 `json:"unitPrice"`
+	ID        uint      `json:"id"`
+	Name      string    `json:"name"`
+	Quantity  int       `json:"quantity"`
+	UnitPrice float64   `json:"unitPrice"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }

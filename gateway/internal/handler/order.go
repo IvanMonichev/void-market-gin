@@ -88,9 +88,12 @@ func (h *OrderHandler) GetAllOrders(c *gin.Context) {
 			SetResult(&transport.User{}).
 			Get(fmt.Sprintf("/users/%s", order.UserID))
 
-		var user transport.User
+		var user *transport.User
 		if err == nil && userResp.StatusCode() == http.StatusOK {
-			user = *userResp.Result().(*transport.User)
+			u := *userResp.Result().(*transport.User)
+			user = &u
+		} else {
+			user = nil
 		}
 
 		fullOrders = append(fullOrders, transport.OrderWithUserRDO{
@@ -166,7 +169,7 @@ func (h *OrderHandler) GetOrder(c *gin.Context) {
 
 	fullOrder := transport.OrderWithUserRDO{
 		ID:        order.ID,
-		User:      *user,
+		User:      user,
 		Status:    order.Status,
 		Total:     order.Total,
 		Items:     order.Items,

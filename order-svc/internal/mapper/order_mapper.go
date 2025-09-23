@@ -13,6 +13,8 @@ func ToOrderRDO(o model.Order) transport.OrderRDO {
 			Name:      item.Name,
 			Quantity:  item.Quantity,
 			UnitPrice: item.UnitPrice,
+			CreatedAt: item.CreatedAt,
+			UpdatedAt: item.UpdatedAt,
 		}
 	}
 
