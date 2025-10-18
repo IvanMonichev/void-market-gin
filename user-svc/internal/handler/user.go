@@ -5,7 +5,6 @@ import (
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/model"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/repository"
 	"github.com/IvanMonichev/void-market-gin/user-svc/internal/transport"
-	"github.com/IvanMonichev/void-market-gin/user-svc/pkg/hash"
 	"github.com/IvanMonichev/void-market-gin/user-svc/pkg/mongo_id"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -30,16 +29,10 @@ func (h *UserHandler) Create(c *gin.Context) {
 		return
 	}
 
-	hashedPassword, err := hash.HashPassword(dto.Password)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to hash password"})
-		return
-	}
-
 	user := &model.User{
 		Email:    dto.Email,
 		Name:     dto.Name,
-		Password: hashedPassword,
+		Password: dto.Password,
 	}
 
 	createdUser, err := h.repository.Create(c.Request.Context(), user)

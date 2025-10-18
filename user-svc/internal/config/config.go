@@ -23,7 +23,7 @@ type ServerCfg struct {
 
 type MongoCfg struct {
 	URI      string        `yaml:"uri" env-required:"true"`
-	Database string        `yaml:"database" env-default:"void_market_user"`
+	Database string        `yaml:"database" env-default:"void-market"`
 	Timeout  time.Duration `yaml:"timeout" env-default:"10s"`
 }
 

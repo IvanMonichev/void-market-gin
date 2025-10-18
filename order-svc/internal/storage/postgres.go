@@ -22,4 +22,6 @@ func AutoMigrate(db *gorm.DB) {
 	if err := db.AutoMigrate(&model.Order{}, &model.OrderItem{}); err != nil {
 		log.Fatalf("auto migration failed: %v", err)
 	}
+
+	fmt.Println("✅ Миграция прошла успешно!")
 }

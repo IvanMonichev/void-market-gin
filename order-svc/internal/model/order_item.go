@@ -5,11 +5,11 @@ import (
 )
 
 type OrderItem struct {
-	ID        uint `gorm:"primaryKey;autoIncrement"`
-	OrderID   uint `gorm:"not null;index"`
-	Name      string
-	Quantity  int
-	UnitPrice float64
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uint      `gorm:"type:serial;primaryKey;autoIncrement"`
+	OrderID   uint      `gorm:"type:integer;not null;index"`
+	Name      string    `gorm:"type:varchar(255);not null"`
+	Quantity  int       `gorm:"type:integer;not null"`
+	UnitPrice float64   `gorm:"type:double precision;not null"`
+	CreatedAt time.Time `gorm:"type:timestamp;not null;default:now()"`
+	UpdatedAt time.Time `gorm:"type:timestamp;not null;default:now()"`
 }
