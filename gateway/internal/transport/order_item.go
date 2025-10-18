@@ -3,6 +3,7 @@ package transport
 import "time"
 
 type OrderItemRDO struct {
+	ID        uint      `json:"id"`
 	Name      string    `json:"name"`
 	Quantity  int       `json:"quantity"`
 	UnitPrice float64   `json:"unitPrice"`
