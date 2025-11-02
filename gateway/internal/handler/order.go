@@ -19,39 +19,25 @@ func NewOrderHandler(clients *client.Clients) *OrderHandler {
 		clients: clients,
 	}
 }
-
 func (h *OrderHandler) CreateOrder(c *gin.Context) {
-	body, err := io.ReadAll(c.Request.Body)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
-		return
-	}
-
 	var input struct {
 		UserID string `json:"userId"`
 	}
-	if err := json.Unmarshal(body, &input); err != nil || input.UserID == "" {
+	if err := c.BindJSON(&input); err != nil || input.UserID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "userId is required"})
 		return
 	}
 
-	userResp, err := h.clients.User.R().
-		Get(fmt.Sprintf("/users/%s", input.UserID))
-	if err != nil || userResp.StatusCode() != http.StatusOK {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid or missing user"})
-		return
-	}
-
-	// Создание заказа
-	orderResp, err := h.clients.Order.R().
-		SetBody(body).
+	resp, err := h.clients.Order.R().
+		SetBody(input).
 		Post("/orders")
+
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"error": "order service unavailable"})
 		return
 	}
 
-	c.Data(orderResp.StatusCode(), orderResp.Header().Get("Content-Type"), orderResp.Body())
+	c.Data(resp.StatusCode(), resp.Header().Get("Content-Type"), resp.Body())
 }
 
 func (h *OrderHandler) GetAllOrders(c *gin.Context) {
