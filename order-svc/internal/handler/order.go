@@ -23,10 +23,6 @@ func NewOrderHandler(repo repository.OrderRepository) *OrderHandler {
 
 func (h *OrderHandler) Create(ctx *gin.Context) {
 	var dto transport.OrderDTO
-	if err := ctx.ShouldBindJSON(&dto); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid input", "details": err.Error()})
-		return
-	}
 
 	items := make([]model.OrderItem, len(dto.Items))
 	var total float64
